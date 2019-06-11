@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 HIDDEN_SIZE = 30            # LSTM中隐藏节点的个数
 NUM_LAYERS = 2              # LSTM的层数
 TIMESTEPS = 10              # 循环神经网络的训练序列长度
-TRAINING_STEPS = 4000      # 训练轮数
+TRAINING_STEPS = 10000      # 训练轮数
 BATCH_SIZE = 32             # batch大小
 TRAINING_EXAMPLES = 10000   # 训练数据个数
 TESTING_EXAMPLES = 1000     # 测试数据个数
 SAMPLE_GAP = 0.01           # 采样间隔
+LEARNING_RATE = 0.1         # 学习效率
 
 
 def generate_data(seq):
@@ -41,7 +42,7 @@ def lstm_model(X, y, is_training):
     loss = tf.losses.mean_squared_error(labels=y, predictions=predictions)
     # 创建模型优化器并得到优化步骤
     train_op = tf.contrib.layers.optimize_loss(loss, tf.train.get_global_step(),
-                                               optimizer='Adagrad', learning_rate=0.1)
+                        optimizer='Adagrad', learning_rate=LEARNING_RATE)
     return predictions, loss, train_op
 
 
