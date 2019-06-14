@@ -35,7 +35,7 @@ def get_dataset(file_path):
 #     csv_columns = [col for col in columns]
     dataset_s = tf.data.experimental.make_csv_dataset(
         file_pattern=file_path,
-        batch_size=12,
+        batch_size=1000,
 #         column_names=columns_use,
         label_name='result',
         num_epochs=1
@@ -53,6 +53,25 @@ def process_categorical_data(data, categories):
 def process_continuous_data(data, mean):
     data = tf.cast(data, tf.float32) * 1/(2 * mean)
     return tf.reshape(data, [-1, 1])
+
+def preprocess(features, labels):
+    columns = ['Name','cpn','rate','price','yield']
+    features['Name'] = process_categorical_data(examples['Name'], categories['Name'])
+    features['cpn'] = process_continuous_data(examples['cpn'], tf.keras.backend.mean(x=examples['cpn']))
+    features['rate'] = process_categorical_data(examples['rate'], categories['rate'])
+    features['price'] = process_continuous_data(examples['price'], tf.keras.backend.mean(x=examples['price']))
+    features['yield'] = process_continuous_data(examples['yield'], tf.keras.backend.mean(x=examples['yield']))
+    features = tf.concat([features[column] for column in columns], -1)
+    return features, labels
+
+def get_model(input_dim, hidden_units=[100]):
+    inputs = tf.keras.Input(shape=(input_dim,))
+    x = inputs
+    for units in hidden_units:
+        x = tf.keras.layers.Dense(units, activation='relu')(x)
+    outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
+    model = tf.keras.Model(inputs, outputs)
+    return model
 
 raw_train_data = get_dataset(train_file_path)
 # print(raw_train_data)
@@ -81,18 +100,18 @@ categories = {
 # print(cpn_mean)
 # processed_cpn = process_continuous_data(cpn_tenor, cpn_mean)
 # print(processed_cpn)
-def preprocess(features, labels):
-    columns = ['Name','cpn','rate','price','yield']
-    features['Name'] = process_categorical_data(examples['Name'], categories['Name'])
-    features['cpn'] = process_continuous_data(examples['cpn'], tf.keras.backend.mean(x=examples['cpn']))
-    features['rate'] = process_categorical_data(examples['rate'], categories['rate'])
-    features['price'] = process_continuous_data(examples['price'], tf.keras.backend.mean(x=examples['price']))
-    features['yield'] = process_continuous_data(examples['yield'], tf.keras.backend.mean(x=examples['yield']))
-    features = tf.concat([features[column] for column in columns], -1)
-    return features, labels
-
 features={}
 train_data = raw_train_data.map(preprocess).shuffle(500)
 examples, labels = next(iter(train_data))
-print("examples:\n", examples, "\n")
-print("labels:\n", labels)
+# print("examples:\n", examples, "\n")
+# print("labels:\n", labels)
+input_shape, output_shape = train_data.output_shapes
+input_dimension = input_shape.dims[1]
+
+model = get_model(input_dimension)
+model.compile(
+    loss='binary_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+)
+model.fit(train_data, epochs=20)
