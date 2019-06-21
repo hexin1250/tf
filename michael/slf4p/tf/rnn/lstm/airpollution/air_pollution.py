@@ -6,8 +6,8 @@ Created on 2019年6月20日
 import pandas as pd
 import math as math
 import numpy as np
-import matplotlib as mpl
 import keras
+from matplotlib import pyplot
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error
@@ -51,7 +51,6 @@ scaled = scaler.fit_transform(values)
 reframed = series_to_supervised(scaled, 1, 1)
 # drop columns we don't want to predict
 reframed.drop(reframed.columns[[9,10,11,12,13,14,15]], axis=1, inplace=True)
-print(reframed.head())
 
 # split into train and test sets
 values = reframed.values
@@ -64,7 +63,7 @@ test_X, test_y = test[:, :-1], test[:, -1]
 # reshape input to be 3D [samples, timestamps, features]
 train_X = train_X.reshape(train_X.shape[0], 1, train_X.shape[1])
 test_X = test_X.reshape(test_X.shape[0], 1, test_X.shape[1])
-print(train_X.shape, train_y.shape, test_X.shape, test_y.shape)
+print("Shapes:", train_X.shape, train_y.shape, test_X.shape, test_y.shape)
 
 # design framework
 model = keras.models.Sequential()
@@ -74,10 +73,10 @@ model.compile(loss='mae', optimizer='adam')
 # fit network
 history = model.fit(train_X, train_y, epochs=50, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
 # plot history
-mpl.pyplot.plot(history.history['loss'], label='train')
-mpl.pyplot.plot(history.history['val_loss'], label='test')
-mpl.pyplot.legend()
-mpl.pyplot.show()
+pyplot.plot(history.history['loss'], label='train')
+pyplot.plot(history.history['val_loss'], label='test')
+pyplot.legend()
+pyplot.show()
 
 # make a prediction
 yhat = model.predict(test_X)
