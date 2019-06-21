@@ -47,8 +47,10 @@ values = values.astype('float32')
 # normalize features
 scaler = MinMaxScaler(feature_range=(0,1))
 scaled = scaler.fit_transform(values)
+print("scaled:", scaled)
 # frame as supervised learning
 reframed = series_to_supervised(scaled, 1, 1)
+print("reframed:", reframed)
 # drop columns we don't want to predict
 reframed.drop(reframed.columns[[9,10,11,12,13,14,15]], axis=1, inplace=True)
 
@@ -80,6 +82,8 @@ pyplot.show()
 
 # make a prediction
 yhat = model.predict(test_X)
+print("test_y:", test_y)
+print("yhat:", yhat)
 test_X = test_X.reshape(test_X.shape[0], test_X.shape[2])
 # invert scaling for forecast
 inv_yhat = np.concatenate((yhat, test_X[:, 1:]), axis=1)
