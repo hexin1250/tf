@@ -7,13 +7,12 @@ import matplotlib.pyplot as plt
 HIDDEN_SIZE = 30            # LSTM中隐藏节点的个数
 NUM_LAYERS = 2              # LSTM的层数
 TIMESTEPS = 10              # 循环神经网络的训练序列长度
-TRAINING_STEPS = 10000      # 训练轮数
+TRAINING_STEPS = 1000       # 训练轮数
 BATCH_SIZE = 32             # batch大小
 TRAINING_EXAMPLES = 10000   # 训练数据个数
 TESTING_EXAMPLES = 1000     # 测试数据个数
 SAMPLE_GAP = 0.01           # 采样间隔
 LEARNING_RATE = 0.1         # 学习效率
-
 
 def generate_data(seq):
     X = []
@@ -49,6 +48,8 @@ def lstm_model(X, y, is_training):
 def train(sess, train_X, train_Y):
     # 将训练数据以数据集的方式提供给计算图
     ds = tf.data.Dataset.from_tensor_slices((train_X, train_Y))
+    print(type(ds))
+    print(ds)
     ds = ds.repeat().shuffle(1000).batch(BATCH_SIZE)
     X, y = ds.make_one_shot_iterator().get_next()
 
@@ -98,8 +99,6 @@ train_X, train_y = generate_data(np.sin(np.linspace(
     0, test_start, TRAINING_EXAMPLES + TIMESTEPS, dtype=np.float32)))
 test_X, test_y = generate_data(np.sin(np.linspace(
     test_start, test_end, TESTING_EXAMPLES + TIMESTEPS, dtype=np.float32)))
-print(train_X)
-print(train_y)
 with tf.Session() as sess:
     train(sess, train_X, train_y)
     run_eval(sess, test_X, test_y)
