@@ -43,7 +43,7 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 # load dataset
 dataset = read_csv('File:/Users/ch/git/tf/pollution.csv', header=0, index_col=0)
 values = dataset.values
-# interger encode direction
+# integer encode direction
 encoder = LabelEncoder()
 values[:,4] = encoder.fit_transform(values[:, 4])
 # ensure all data is float
