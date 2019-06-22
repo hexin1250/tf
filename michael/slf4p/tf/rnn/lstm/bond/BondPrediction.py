@@ -1,5 +1,5 @@
 '''
-Created on 2019年6月20日
+Created on 2019年6月21日
 
 @author: ch
 '''
@@ -37,11 +37,12 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
     return agg
 
 # load dataset
-dataset = pd.read_csv('File:/Users/ch/git/tf/pollution.csv', header=0, index_col=0)
+dataset = pd.read_csv('File:/Users/ch/git/tf/bid.csv', header=0, index_col=0)
 values = dataset.values
 # integer encode direction
 encoder = LabelEncoder()
-values[:,4] = encoder.fit_transform(values[:, 4])
+values[:,1] = encoder.fit_transform(values[:, 1])
+values[:,3] = encoder.fit_transform(values[:, 3])
 # ensure all data is float
 values = values.astype('float32')
 # normalize features
@@ -50,15 +51,17 @@ scaled = scaler.fit_transform(values)
 # frame as supervised learning
 reframed = series_to_supervised(scaled, 1, 1)
 # drop columns we don't want to predict
-reframed.drop(reframed.columns[[9,10,11,12,13,14,15]], axis=1, inplace=True)
+reframed.drop(reframed.columns[[7,8,9,10,11]], axis=1, inplace=True)
 
 # split into train and test sets
 values = reframed.values
-n_train_hours = 365 * 24
+n_train_hours = 365 * 6 * 10
 train = values[:n_train_hours, :]
 test = values[n_train_hours:, :]
 # split into input and outputs
 train_X, train_y = train[:, :-1], train[:, -1]
+print("train_x:", train_X)
+print("train_y:", train_y)
 test_X, test_y = test[:, :-1], test[:, -1]
 # reshape input to be 3D [samples, timestamps, features]
 train_X = train_X.reshape(train_X.shape[0], 1, train_X.shape[1])
@@ -67,11 +70,11 @@ print("Shapes:", train_X.shape, train_y.shape, test_X.shape, test_y.shape)
 
 # design framework
 model = keras.models.Sequential()
-model.add(keras.layers.LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
+model.add(keras.layers.LSTM(32, input_shape=(train_X.shape[1], train_X.shape[2])))
 model.add(keras.layers.Dense(1))
 model.compile(loss='mae', optimizer='adam')
 # fit network
-history = model.fit(train_X, train_y, epochs=50, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
 # plot history
 pyplot.plot(history.history['loss'], label='train')
 pyplot.plot(history.history['val_loss'], label='test')
@@ -80,8 +83,6 @@ pyplot.show()
 
 # make a prediction
 yhat = model.predict(test_X)
-print("test_y:", test_y)
-print("yhat:", yhat)
 test_X = test_X.reshape(test_X.shape[0], test_X.shape[2])
 # invert scaling for forecast
 inv_yhat = np.concatenate((yhat, test_X[:, 1:]), axis=1)
