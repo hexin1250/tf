@@ -73,6 +73,15 @@ def get_model(input_dim, hidden_units=[100]):
     model = tf.keras.Model(inputs, outputs)
     return model
 
+def lstm_model(X, y, is_training):
+    model = tf.keras.layers.LSTM(
+        rnn_unit=1024,
+        return_sequences=True,
+        stateful=True,
+        recurrent_initializer='glorot_uniform'
+    )
+    return model
+
 raw_train_data = get_dataset(train_file_path)
 # print(raw_train_data)
 # name, cpn, rate, price, yld, result = next(iter(raw_train_data))
@@ -100,18 +109,21 @@ categories = {
 # print(cpn_mean)
 # processed_cpn = process_continuous_data(cpn_tenor, cpn_mean)
 # print(processed_cpn)
-features={}
+# train_data = raw_train_data.shuffle(500)
 train_data = raw_train_data.map(preprocess).shuffle(500)
 examples, labels = next(iter(train_data))
 # print("examples:\n", examples, "\n")
 # print("labels:\n", labels)
-input_shape, output_shape = train_data.output_shapes
-input_dimension = input_shape.dims[1]
+# input_shape, output_shape = train_data.output_shapes
+# input_dimension = input_shape.dims[1]
+# 
+# model = get_model(input_dimension)
+# model.compile(
+#     loss='binary_crossentropy',
+#     optimizer='adam',
+#     metrics=['accuracy']
+# )
+# model.fit(train_data, epochs=20)
 
-model = get_model(input_dimension)
-model.compile(
-    loss='binary_crossentropy',
-    optimizer='adam',
-    metrics=['accuracy']
-)
-model.fit(train_data, epochs=20)
+tf.data.Dataset.from_tensor_slices(examples)
+tf.keras.losses.mean_squared_error(y_true=labels, y_pred=None)
