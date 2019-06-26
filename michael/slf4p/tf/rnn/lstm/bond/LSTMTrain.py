@@ -30,12 +30,12 @@ for i in namelist:
     train_X, train_y = get_XY(train)
     test_X, test_y = get_XY(test)
     
-    model = keras.models.Sequential()
-    model.add(keras.layers.LSTM(32, input_shape=(train_X.shape[1], train_X.shape[2])))
-    model.add(keras.layers.Dense(1))
-    model.compile(loss='mae', optimizer='adam')
-#     model = load_model(filepath='/Users/ch/git/tf/resources/model/bond-' + name + '.md')
-#     model.load_weights(filepath='/Users/ch/git/tf/resources/model/bond_weights-' + name + '.md')
+#     model = keras.models.Sequential()
+#     model.add(keras.layers.LSTM(32, input_shape=(train_X.shape[1], train_X.shape[2])))
+#     model.add(keras.layers.Dense(1))
+#     model.compile(loss='mae', optimizer='adam')
+    model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
+    model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
     history = model.fit(train_X, train_y, epochs=100, batch_size=10, validation_data=(test_X, test_y), verbose=2, shuffle=False)
     # plot history
 #     pyplot.plot(history.history['loss'], label='train')
