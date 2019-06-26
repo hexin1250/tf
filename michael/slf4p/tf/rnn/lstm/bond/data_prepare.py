@@ -14,9 +14,10 @@ def split_data(filepath, topath, splitpath=None, split_test=False):
     dataset.drop('No', axis=1, inplace=True)
     dataset.columns = ['result', 'name', 'cpn', 'rate', 'price', 'yield']
     dataset.index.name = 'date'
+    ds_size = len(dataset) - 500
     if split_test:
-        val_dataset = dataset[:9500]
-        test_dataset = dataset[9500:]
+        val_dataset = dataset[:ds_size]
+        test_dataset = dataset[ds_size:]
         val_dataset.to_csv(topath)
         test_dataset.to_csv(splitpath)
     else:

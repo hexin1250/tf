@@ -16,8 +16,8 @@ from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_data
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_XY
 
 namelist = ["Michael", "Wendy", "Vicky", "Sam", "George", "Rose"]
-for i in namelist:
-    name = i
+# namelist = ["George"]
+for name in namelist:
     dataset = pd.read_csv('File:/Users/ch/git/tf/resources/data/' + name + '-bid-seq-train.csv', header=0, index_col=0)
     scaler = MinMaxScaler(feature_range=(0,1))
     values = get_data(dataset, scaler, encoder=LabelEncoder())
@@ -36,7 +36,8 @@ for i in namelist:
 #     model.compile(loss='mae', optimizer='adam')
     model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
-    history = model.fit(train_X, train_y, epochs=100, batch_size=10, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+    print("current train client:", name)
+    history = model.fit(train_X, train_y, epochs=10000, batch_size=100, validation_data=(test_X, test_y), verbose=2, shuffle=False)
     # plot history
 #     pyplot.plot(history.history['loss'], label='train')
 #     pyplot.plot(history.history['val_loss'], label='test')
@@ -47,11 +48,11 @@ for i in namelist:
     model.save(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
     model.save(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     # val_dataset = pd.read_csv('File:/Users/ch/git/tf/test-seq.csv', header=0, index_col=0)
-    val_dataset = pd.read_csv('File:/Users/ch/git/tf/resources/data/' + name + '-bid-seq-test.csv', header=0, index_col=0)
-    val_values = get_data(val_dataset, scaler, encoder=LabelEncoder())
-    # split into input and outputs
-    val_X, val_y = get_XY(val_values)
-    actual_y = model.predict(val_X)
-    print(name, ":expected value\tpredict value")
-    for i in range(len(val_y)):
-        print(val_y[i], actual_y[i])
+#     val_dataset = pd.read_csv('File:/Users/ch/git/tf/resources/data/' + name + '-bid-seq-test.csv', header=0, index_col=0)
+#     val_values = get_data(val_dataset, scaler, encoder=LabelEncoder())
+#     # split into input and outputs
+#     val_X, val_y = get_XY(val_values)
+#     actual_y = model.predict(val_X)
+#     print(name, ":expected value\tpredict value")
+#     for i in range(len(val_y)):
+#         print(val_y[i], actual_y[i])
