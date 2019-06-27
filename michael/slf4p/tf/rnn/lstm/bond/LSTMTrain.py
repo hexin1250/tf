@@ -37,7 +37,9 @@ for name in namelist:
     model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
     print("current train client:", name)
-    history = model.fit(train_X, train_y, epochs=10000, batch_size=100, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+#     batch_size = int(len(train) / 2)
+    batch_size = 100
+    history = model.fit(train_X, train_y, epochs=10000, batch_size=batch_size, validation_data=(test_X, test_y), verbose=2, shuffle=False)
     # plot history
 #     pyplot.plot(history.history['loss'], label='train')
 #     pyplot.plot(history.history['val_loss'], label='test')
