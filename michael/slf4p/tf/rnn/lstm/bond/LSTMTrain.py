@@ -4,26 +4,27 @@ Created on 2019年6月26日
 @author: ch
 '''
 import pandas as pd
-import math as math
 import numpy as np
 import keras
 from matplotlib import pyplot
+import pickle
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error
 from keras.models import load_model
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_data
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_XY
 
 namelist = ["Michael", "Wendy", "Vicky", "Sam", "George", "Rose"]
-# namelist = ["George"]
+# namelist = ["Michael"]
 for name in namelist:
     dataset = pd.read_csv('File:/Users/ch/git/tf/resources/data/' + name + '-bid-seq-train.csv', header=0, index_col=0)
     scaler = MinMaxScaler(feature_range=(0,1))
-    values = get_data(dataset, scaler, encoder=LabelEncoder())
+    values = get_data(dataset, scaler, fit=True)
+    with open('/Users/ch/git/tf/resources/minmax/' + name + '-minmax.pk', 'wb') as fid:
+        pickle.dump(scaler, fid)
     
     validation_ds = pd.read_csv('/Users/ch/git/tf/resources/data/' + name + '-bid-seq-val.csv', header=0, index_col=0)
-    validation_values = get_data(validation_ds, scaler, encoder=LabelEncoder())
+    validation_values = get_data(validation_ds, scaler)
     
     train = values
     test = validation_values
@@ -37,9 +38,9 @@ for name in namelist:
     model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
     print("current train client:", name)
-#     batch_size = int(len(train) / 2)
-    batch_size = 100
-    history = model.fit(train_X, train_y, epochs=10000, batch_size=batch_size, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+    batch_size = int(len(train) / 3)
+#     batch_size = 100
+    history = model.fit(train_X, train_y, epochs=10, batch_size=batch_size, validation_data=(test_X, test_y), verbose=2, shuffle=False)
     # plot history
 #     pyplot.plot(history.history['loss'], label='train')
 #     pyplot.plot(history.history['val_loss'], label='test')
@@ -51,7 +52,7 @@ for name in namelist:
     model.save(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     # val_dataset = pd.read_csv('File:/Users/ch/git/tf/test-seq.csv', header=0, index_col=0)
 #     val_dataset = pd.read_csv('File:/Users/ch/git/tf/resources/data/' + name + '-bid-seq-test.csv', header=0, index_col=0)
-#     val_values = get_data(val_dataset, scaler, encoder=LabelEncoder())
+#     val_values = get_data(val_dataset, scaler)
 #     # split into input and outputs
 #     val_X, val_y = get_XY(val_values)
 #     actual_y = model.predict(val_X)

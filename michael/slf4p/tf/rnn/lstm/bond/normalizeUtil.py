@@ -6,17 +6,17 @@ Created on 2019年6月26日
 import pandas as pd
 
 # convert series to supervised learning
-def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
+def series_to_supervised(data, n_in=0, n_out=1, dropnan=True):
     n_vars = 1 if type(data) is list else data.shape[1]
     df = pd.DataFrame(data)
     cols, names = list(), list()
     # input sequence (t-n, ..., t-1)
     for i in range(n_in, 0, -1):
-        cols.append(df.shift(i))
+        cols.append(df.shift(0))
         names += [('var%d(t-%d)' % (j+1, i)) for j in range(n_vars)]
     # forecast sequence (t, t+1, ..., t+n)
     for i in range(0, n_out):
-        cols.append(df.shift(-1))
+        cols.append(df.shift(0))
         if i == 0:
             names += [('var%d(t)' % (j+1)) for j in range(n_vars)]
         else:
@@ -29,14 +29,14 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
         agg.dropna(inplace=True)
     return agg
 
-def get_data(dataset, scaler, encoder):
+def get_data(dataset, scaler, fit=False):
     values = dataset.values
-#     values[:,1] = encoder.fit_transform(values[:, 1])
-#     values[:,3] = encoder.fit_transform(values[:, 3])
     # ensure all data is float
     values = values.astype('float32')
     # normalize features
-    scaled = scaler.fit_transform(values)
+    if fit:
+        scaler.fit(values)
+    scaled = scaler.transform(values)
     # frame as supervised learning
     reframed = series_to_supervised(scaled, 1, 1)
     # drop columns we don't want to predict
