@@ -33,22 +33,23 @@ def consist_data(sys_args, order):
 
 namelist = ["Michael", "Wendy", "Vicky", "Sam", "George", "Rose"]
 # args = sys.argv[1:]
-# args = [0.055,1,101.68660559,0.005]
-args = [2.17947768,4,100.60311253,0.02166412]
+args = [2.25438205,6,100.07637840000001,0.02252662]
+# args = [2.17947768,4,100.60311253,0.02166412]
 # namelist = ["Wendy"]
 for i in range(len(namelist)):
     name = namelist[i]
     model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
-    with open('/Users/ch/git/tf/resources/minmax/' + name + '-minmax.pk', 'rb') as fid:
+    minmaxFile = '/Users/ch/git/tf/resources/minmax/' + name + '-minmax.pk'
+    print("current minmax model file:", minmaxFile)
+    with open(minmaxFile, 'rb') as fid:
         scaler = pickle.load(fid)
     # integer encode direction
     encoder = LabelEncoder()
     dataset = consist_data(sys_args=args, order=i)
-    print(dataset)
-    val_values = get_data(dataset, scaler)
+    val_values_X, val_y = get_data(dataset, scaler)
     # split into input and outputs
-    val_X, val_y = get_XY(val_values)
+    val_X = get_XY(val_values_X)
     print(val_X)
     actual_y = model.predict(val_X)
     print(name, "predict value", str(actual_y[0]).replace("[", "").replace("]", ""))

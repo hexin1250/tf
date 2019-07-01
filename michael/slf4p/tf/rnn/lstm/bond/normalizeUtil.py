@@ -44,11 +44,13 @@ def get_data(dataset, scaler, fit=False):
     
     # split into train and test sets
     values = reframed.values
-    return values
+    X = values[:, 2:6]
+    Y = values[:, 0]
+    return X, Y
 
 def data_X_reshape(X):
     return X.reshape(X.shape[0], 1, X.shape[1])
 
 def get_XY(data):
     # reshape input to be 3D [samples, timestamps, features]
-    return data_X_reshape(data[:, :-1]), data[:, -1]
+    return data_X_reshape(data)

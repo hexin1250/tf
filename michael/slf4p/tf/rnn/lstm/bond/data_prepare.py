@@ -24,7 +24,6 @@ for i in namelist:
     
     filepath = '/Users/ch/eclipse-workspace/neural-rnn/src/main/resources/data/val-seq-' + i + '.data'
     topath = '/Users/ch/git/tf/resources/data/' + i + '-bid-seq-val.csv'
-    splitpath = '/Users/ch/git/tf/resources/data/' + i + '-bid-seq-test.csv'
     split_data(filepath, topath)
     
     filepath = '/Users/ch/eclipse-workspace/neural-rnn/src/main/resources/data/test-seq-' + i + '.data'
