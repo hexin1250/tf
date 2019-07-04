@@ -31,9 +31,12 @@ def consist_data(sys_args, order):
         arr.append(item)
     return convert_to_dataframe(arr)
 
-namelist = ["Michael", "Wendy", "Vicky", "Sam", "George", "Rose"]
+namelist = ["George", "Michael", "Sam", "Wendy", "Rose", "Vicky"]
 # args = sys.argv[1:]
-args = [2.25438205,6,100.07637840000001,0.02252662]
+yield_v = 0.0392662
+price_v = 100.07637840000001
+rating = 3
+args = [yield_v * price_v, rating, price_v, yield_v]
 # args = [2.17947768,4,100.60311253,0.02166412]
 # namelist = ["Wendy"]
 for i in range(len(namelist)):
@@ -41,7 +44,6 @@ for i in range(len(namelist)):
     model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
     minmaxFile = '/Users/ch/git/tf/resources/minmax/' + name + '-minmax.pk'
-    print("current minmax model file:", minmaxFile)
     with open(minmaxFile, 'rb') as fid:
         scaler = pickle.load(fid)
     # integer encode direction
@@ -50,6 +52,6 @@ for i in range(len(namelist)):
     val_values_X, val_y = get_data(dataset, scaler)
     # split into input and outputs
     val_X = get_XY(val_values_X)
-    print(val_X)
     actual_y = model.predict(val_X)
-    print(name, "predict value", str(actual_y[0]).replace("[", "").replace("]", ""))
+    print(str(actual_y[0]).replace("[", "").replace("]", ""))
+#     print(name, "predict value", str(actual_y[0]).replace("[", "").replace("]", ""))

@@ -4,6 +4,8 @@ Created on 2019年6月26日
 @author: ch
 '''
 import pandas as pd
+import numpy as np
+import datetime
 
 # convert series to supervised learning
 def series_to_supervised(data, n_in=0, n_out=1, dropnan=True):
@@ -54,3 +56,31 @@ def data_X_reshape(X):
 def get_XY(data):
     # reshape input to be 3D [samples, timestamps, features]
     return data_X_reshape(data)
+
+def convert_to_dataframe(arr):
+    std_arr = ['', 'result','name','cpn','rate','price','yield']
+    new_arr = []
+    new_arr.append(std_arr)
+    new_arr.append(arr)
+    data = np.array(new_arr)
+    return pd.DataFrame(data=data[1:, 1:], index=data[1:, 0], columns=data[0, 1:])
+
+def consist_data(sys_args, order):
+    arr = []
+    arr.append(datetime.datetime.now())
+#     arr.append(datetime.datetime.strptime('2016 07 16 01', '%Y %m %d %H'))
+    arr.append(1)
+    arr.append(order)
+    for item in sys_args:
+        arr.append(item)
+    return convert_to_dataframe(arr)
+
+def parse(x):
+    return datetime.datetime.strptime(x, '%Y %m %d %H')
+
+def split_data(filepath, topath):
+    dataset = pd.read_csv(filepath, parse_dates=[['year', 'month', 'day', 'hour']], index_col=0, date_parser=parse)
+    dataset.drop('No', axis=1, inplace=True)
+    dataset.columns = ['result', 'name', 'cpn', 'rate', 'price', 'yield']
+    dataset.index.name = 'date'
+    dataset.to_csv(topath)

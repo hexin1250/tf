@@ -3,18 +3,7 @@ Created on 2019年6月26日
 
 @author: ch
 '''
-import pandas as pd
-import datetime
-
-def parse(x):
-    return datetime.datetime.strptime(x, '%Y %m %d %H')
-
-def split_data(filepath, topath):
-    dataset = pd.read_csv(filepath, parse_dates=[['year', 'month', 'day', 'hour']], index_col=0, date_parser=parse)
-    dataset.drop('No', axis=1, inplace=True)
-    dataset.columns = ['result', 'name', 'cpn', 'rate', 'price', 'yield']
-    dataset.index.name = 'date'
-    dataset.to_csv(topath)
+from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import split_data
 
 namelist = ["Michael", "Wendy", "Vicky", "Sam", "George", "Rose"]
 for i in namelist:

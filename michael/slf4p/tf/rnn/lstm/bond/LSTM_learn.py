@@ -4,18 +4,17 @@ Created on 2019年6月26日
 @author: ch
 '''
 import pandas as pd
-import numpy as np
 import keras
-from matplotlib import pyplot
 import pickle
+from matplotlib import pyplot
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from keras.models import load_model
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_data
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_XY
 
-namelist = ["Michael", "Wendy", "Vicky", "Sam", "George", "Rose"]
-# namelist = ["Michael"]
+# namelist = ["Michael", "Wendy", "Vicky", "Sam", "George", "Rose"]
+namelist = ["Vicky"]
 for name in namelist:
     dataset = pd.read_csv('File:/Users/ch/git/tf/resources/data/' + name + '-bid-seq-train.csv', header=0, index_col=0)
     scaler = MinMaxScaler(feature_range=(0,1))
@@ -29,9 +28,10 @@ for name in namelist:
     test_X = get_XY(values_test_X)
     
 #     model = keras.models.Sequential()
-#     model.add(keras.layers.LSTM(32, input_shape=(train_X.shape[1], train_X.shape[2])))
+#     model.add(keras.layers.LSTM(8, input_shape=(train_X.shape[1], train_X.shape[2])))
 #     model.add(keras.layers.Dense(1))
-#     model.compile(loss='mae', optimizer='adam')
+# #     model.compile(loss='mae', optimizer='adam')
+#     model.compile(loss='mean_squared_error', optimizer='adam')
     model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
     print("current train client:", name)

@@ -16,7 +16,7 @@ from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_XY
 # Sam: 0.816 - 0.988 - 0.998
 # George: 0.966 - 0.988 - 0.99
 # Rose: 1
-namelist = ["George"]
+namelist = ["Michael"]
 for name in namelist:
     model = load_model(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/model/' + name + '-bond_weights.md')
