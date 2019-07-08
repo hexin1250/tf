@@ -24,7 +24,7 @@ for i in range(len(namelist)):
                         learning_rate_init=.1,
                         tol=1e-4,
                         early_stopping=False,
-                        hidden_layer_sizes=(10,3), random_state=1)
+                        hidden_layer_sizes=(5,5), random_state=1)
     for i in range(10):
         clf.fit(X, y)
     with open('/Users/ch/git/tf/resources/bp/model/' + name + '.model', 'wb') as fid:

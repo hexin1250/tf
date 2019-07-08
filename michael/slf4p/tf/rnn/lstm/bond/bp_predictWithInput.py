@@ -9,9 +9,9 @@ from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import consist_data
 
 arr = []
 # args = sys.argv[1:]
-yield_v = 0.0392662
+yield_v = 0.001392662
 price_v = 100.07637840000001
-rating = 3
+rating = 6
 args = [yield_v * price_v, rating, price_v, yield_v]
 
 namelist = ["George", "Michael", "Sam", "Wendy", "Rose", "Vicky"]

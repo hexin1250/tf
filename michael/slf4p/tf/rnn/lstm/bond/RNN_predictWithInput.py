@@ -24,9 +24,9 @@ args = [yield_v * price_v, rating, price_v, yield_v]
 namelist = ["Michael"]
 for i in range(len(namelist)):
     name = namelist[i]
-    model = load_model(filepath='/Users/ch/git/tf/resources/lstm/model/' + name + '-bond.md')
-    model.load_weights(filepath='/Users/ch/git/tf/resources/lstm/model/' + name + '-bond_weights.md')
-    minmaxFile = '/Users/ch/git/tf/resources/lstm/minmax/' + name + '-minmax.pk'
+    model = load_model(filepath='/Users/ch/git/tf/resources/rnn/model/' + name + '-bond.md')
+    model.load_weights(filepath='/Users/ch/git/tf/resources/rnn/model/' + name + '-bond_weights.md')
+    minmaxFile = '/Users/ch/git/tf/resources/rnn/minmax/' + name + '-minmax.pk'
     with open(minmaxFile, 'rb') as fid:
         scaler = pickle.load(fid)
     # integer encode direction
