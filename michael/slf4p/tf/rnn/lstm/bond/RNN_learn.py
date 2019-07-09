@@ -12,9 +12,9 @@ from keras.models import load_model
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_data
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_XY
 
-times=10000
-# namelist = ["George", "Michael", "Sam", "Wendy", "Rose", "Vicky"]
-namelist = ["Vicky"]
+times=1
+namelist = ["George", "Michael", "Sam", "Wendy", "Rose", "Vicky"]
+# namelist = ["Vicky"]
 for name in namelist:
     dataset = pd.read_csv('File:/Users/ch/git/tf/resources/data/' + name + '-bid-seq-train.csv', header=0, index_col=0)
     scaler = MinMaxScaler(feature_range=(0,1))
@@ -28,8 +28,8 @@ for name in namelist:
     test_X = get_XY(values_test_X)
 #     
 #     model = keras.models.Sequential()
-#     model.add(keras.layers.SimpleRNN(units=100, input_shape=(train_X.shape[1], train_X.shape[2])))
-#     model.add(keras.layers.Dense(1))
+#     model.add(keras.layers.SimpleRNN(units=10, input_shape=(train_X.shape[1], train_X.shape[2])))
+#     model.add(keras.layers.Dense(1, activation='sigmoid'))
 #     model.compile(loss='mse', optimizer='nadam', metrics=['accuracy'])
 
     model = load_model(filepath='/Users/ch/git/tf/resources/rnn/model/' + name + '-bond.md')

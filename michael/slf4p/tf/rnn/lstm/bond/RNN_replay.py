@@ -10,13 +10,7 @@ from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_data
 from michael.slf4p.tf.rnn.lstm.bond.normalizeUtil import get_XY
 
 namelist = ["George", "Michael", "Sam", "Wendy", "Rose", "Vicky"]
-# Michael:1
-# Wendy: 0.7 - 0.94 - 0.96
-# Vicky: 0.818 - 0.946 - 0.98
-# Sam: 0.816 - 0.988 - 0.998
-# George: 0.966 - 0.988 - 0.99
-# Rose: 1
-# namelist = ["Michael"]
+# namelist = ["Vicky"]
 for name in namelist:
     model = load_model(filepath='/Users/ch/git/tf/resources/rnn/model/' + name + '-bond.md')
     model.load_weights(filepath='/Users/ch/git/tf/resources/rnn/model/' + name + '-bond_weights.md')
